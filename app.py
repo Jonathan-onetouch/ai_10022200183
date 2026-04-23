@@ -126,8 +126,14 @@ st.markdown(
 
 if "pipeline" not in st.session_state:
     cfg = AppConfig()
-    st.session_state.pipeline = RAGPipeline(cfg)
-    st.session_state.pipeline.build_or_load_index(strategy="sentence")
+    try:
+        st.session_state.pipeline = RAGPipeline(cfg)
+        st.session_state.pipeline.build_or_load_index(strategy="sentence")
+        st.session_state.pipeline_error = None
+    except ValueError as e:
+        # Do not crash app when cloud secret is missing; allow manual logs page to remain usable.
+        st.session_state.pipeline = None
+        st.session_state.pipeline_error = str(e)
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "active_result" not in st.session_state:
@@ -354,18 +360,27 @@ else:
             st.markdown('<div class="small-muted">No pipeline event yet.</div>', unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
+    if st.session_state.get("pipeline_error"):
+        st.warning(
+            "LLM service is not configured. Add `GROQ_API_KEY` (or `OPENAI_API_KEY`) in app secrets/environment "
+            "to enable chat responses."
+        )
+
     user_input = st.chat_input("Ask anything about Ghana elections or the 2025 budget...")
     if user_input and user_input.strip():
-        st.session_state.messages.append({"role": "user", "content": user_input.strip()})
-        with st.spinner("Thinking..."):
-            result = st.session_state.pipeline.ask(user_input.strip(), top_k=3)
-        st.session_state.active_result = result
-        st.session_state.messages.append(
-            {
-                "role": "assistant",
-                "content": result["response"],
-                "sources": result["retrieved"][:3],
-                "meta": {"model": AppConfig().llm_model, "latency": "~3-5s"},
-            }
-        )
-        st.rerun()
+        if st.session_state.pipeline is None:
+            st.error("Chat is unavailable until API key is configured in deployment secrets.")
+        else:
+            st.session_state.messages.append({"role": "user", "content": user_input.strip()})
+            with st.spinner("Thinking..."):
+                result = st.session_state.pipeline.ask(user_input.strip(), top_k=3)
+            st.session_state.active_result = result
+            st.session_state.messages.append(
+                {
+                    "role": "assistant",
+                    "content": result["response"],
+                    "sources": result["retrieved"][:3],
+                    "meta": {"model": AppConfig().llm_model, "latency": "~3-5s"},
+                }
+            )
+            st.rerun()
