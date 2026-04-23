@@ -1,0 +1,5 @@
+[
+  {
+    "note": "OPENAI_API_KEY not set; adversarial RAG vs pure LLM evaluation was skipped."
+  }
+]

@@ -1,0 +1,9 @@
+# Student Name: jonatahn ahuche
+# Student Index Number: 10022200183
+
+.venv/
+__pycache__/
+*.pyc
+.env
+data/cache/
+*.log

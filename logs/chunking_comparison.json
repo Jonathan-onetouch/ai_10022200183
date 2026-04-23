@@ -1,0 +1,92 @@
+{
+  "fixed": {
+    "num_chunks": 1751,
+    "sample_retrievals": [
+      {
+        "query": "Which fiscal policy measures are highlighted in the 2025 budget?",
+        "top_results": [
+          {
+            "chunk_id": "pdf_76_fixed_3",
+            "score": 0.6969492894411087,
+            "text_preview": "to achieve this fiscal objective, Total Revenue and Grants are projected to moderate from 15.9 percent of GDP in 2024 to 16.1 percent in 2025, and further to 16.9 percent by 2028. "
+          },
+          {
+            "chunk_id": "pdf_62_fixed_0",
+            "score": 0.6610005331039428,
+            "text_preview": "Resetting the Economy for the Ghana We Want 2025 Budget 51 2025 Macroeconomic Targets 250. Mr. Speaker, in pursuit of the overarching macroeconomic objectives, the following macroe"
+          },
+          {
+            "chunk_id": "pdf_61_fixed_0",
+            "score": 0.6599508297443389,
+            "text_preview": "Resetting the Economy for the Ghana We Want 2025 Budget 50 243. Mr. Speaker, Ghanaians, through the recent National Economic Dialogue, have expressed a clear desire for the fiscal "
+          }
+        ]
+      },
+      {
+        "query": "Which constituency had strong vote counts in the election dataset?",
+        "top_results": [
+          {
+            "chunk_id": "csv_518_fixed_0",
+            "score": 0.3506951451301575,
+            "text_preview": "Year: 2000 | Old Region: Central Region | New Region: Central Region | Code: Others | Candidate: Edward Mahama | Party: PNC | Votes: 2648 | Votes(%): 0.26%"
+          },
+          {
+            "chunk_id": "csv_533_fixed_0",
+            "score": 0.34418686032295226,
+            "text_preview": "Year: 2000 | Old Region: Northern Region | New Region: Northern Region | Code: Others | Candidate: Edward Mahama | Party: PNC | Votes: 45870 | Votes(%): 4.15%"
+          },
+          {
+            "chunk_id": "csv_476_fixed_0",
+            "score": 0.3426871955394745,
+            "text_preview": "Year: 2004 | Old Region: Central Region | New Region: Central Region | Code: Others | Candidate: Edward Mahama | Party: PNC | Votes: 5718 | Votes(%): 0.82%"
+          }
+        ]
+      }
+    ]
+  },
+  "sentence": {
+    "num_chunks": 1406,
+    "sample_retrievals": [
+      {
+        "query": "Which fiscal policy measures are highlighted in the 2025 budget?",
+        "top_results": [
+          {
+            "chunk_id": "pdf_76_sent_2",
+            "score": 0.7339609432220459,
+            "text_preview": "This commitment underscores our resolve to ensure debt sustainability, and create the fiscal space needed for long-term economic growth. 345. Mr. Speaker, we believe that the amend"
+          },
+          {
+            "chunk_id": "pdf_61_sent_0",
+            "score": 0.6834734427928925,
+            "text_preview": "Resetting the Economy for the Ghana We Want 2025 Budget 50 243. Mr. Speaker, Ghanaians, through the recent National Economic Dialogue, have expressed a clear desire for the fiscal "
+          },
+          {
+            "chunk_id": "pdf_62_sent_0",
+            "score": 0.6788148832321167,
+            "text_preview": "Resetting the Economy for the Ghana We Want 2025 Budget 51 2025 Macroeconomic Targets 250. Mr. Speaker, in pursuit of the overarching macroeconomic objectives, the following macroe"
+          }
+        ]
+      },
+      {
+        "query": "Which constituency had strong vote counts in the election dataset?",
+        "top_results": [
+          {
+            "chunk_id": "csv_518_sent_0",
+            "score": 0.3506951451301575,
+            "text_preview": "Year: 2000 | Old Region: Central Region | New Region: Central Region | Code: Others | Candidate: Edward Mahama | Party: PNC | Votes: 2648 | Votes(%): 0.26%"
+          },
+          {
+            "chunk_id": "csv_533_sent_0",
+            "score": 0.34418686032295226,
+            "text_preview": "Year: 2000 | Old Region: Northern Region | New Region: Northern Region | Code: Others | Candidate: Edward Mahama | Party: PNC | Votes: 45870 | Votes(%): 4.15%"
+          },
+          {
+            "chunk_id": "csv_476_sent_0",
+            "score": 0.3426871955394745,
+            "text_preview": "Year: 2004 | Old Region: Central Region | New Region: Central Region | Code: Others | Candidate: Edward Mahama | Party: PNC | Votes: 5718 | Votes(%): 0.82%"
+          }
+        ]
+      }
+    ]
+  }
+}
