@@ -46,7 +46,7 @@ st.markdown(
     [data-testid="stSidebar"],
     [data-testid="stSidebar"] > div,
     section[data-testid="stSidebar"] > div {
-        background: linear-gradient(180deg, #050d1a 0%, #0D2B52 55%, #0a1f3d 100%) !important;
+        background: linear-gradient(180deg, #143059 0%, #1e4976 45%, #0D2B52 100%) !important;
     }
     [data-testid="stSidebar"] .block-container {
         background: transparent !important;
@@ -84,8 +84,32 @@ st.markdown(
     [data-testid="stSidebar"] .stButton > button:focus {
         box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.55) !important;
     }
-    .logo-title { font-size: 1.55rem; font-weight: 700; margin-bottom: 0.1rem; }
-    .logo-sub { font-size: 0.8rem; color: #B6C9DB; margin-bottom: 1rem; }
+    /* Custom HTML in sidebar must set colors explicitly (otherwise body text color is dark). */
+    [data-testid="stSidebar"] .logo-title {
+        font-size: 1.55rem;
+        font-weight: 800;
+        margin-bottom: 0.15rem;
+        color: #FFFFFF !important;
+        letter-spacing: 0.02em;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    }
+    [data-testid="stSidebar"] .logo-sub {
+        font-size: 0.82rem;
+        color: #E2E8F0 !important;
+        margin-bottom: 0.35rem;
+        line-height: 1.35;
+    }
+    [data-testid="stSidebar"] .sidebar-student {
+        font-size: 0.78rem;
+        color: #BFDBFE !important;
+        margin-bottom: 0.85rem;
+        line-height: 1.4;
+        opacity: 0.98;
+    }
+    [data-testid="stSidebar"] .sidebar-student strong {
+        color: #FFFFFF !important;
+        font-weight: 700;
+    }
     .section-chip {
         background: rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 0.58rem 0.75rem;
         margin-bottom: 0.4rem; font-size: 0.92rem;
@@ -118,8 +142,17 @@ st.markdown(
     .ctx-item { border: 1px solid var(--line); border-radius: 10px; padding: 0.5rem; margin-bottom: 0.45rem; background: #FBFCFF; }
     .small-muted { color: var(--muted); font-size: 0.8rem; }
     .source-list { border-top: 1px solid var(--line); margin-top: 0.7rem; padding-top: 0.55rem; }
-    .profile {
-        background: rgba(255,255,255,0.12); border-radius: 12px; padding: 0.72rem; font-size: 0.85rem;
+    [data-testid="stSidebar"] .profile {
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(191, 219, 254, 0.25);
+        border-radius: 12px;
+        padding: 0.72rem;
+        font-size: 0.85rem;
+        color: #F8FAFC !important;
+    }
+    [data-testid="stSidebar"] .profile b,
+    [data-testid="stSidebar"] .profile strong {
+        color: #FFFFFF !important;
     }
     .recent-title {
         margin-top: 0.6rem; margin-bottom: 0.4rem; font-size: 0.78rem; color: #A9BDD7;
@@ -174,6 +207,11 @@ if "selected_log_id" not in st.session_state:
 with st.sidebar:
     st.markdown('<div class="logo-title">ACity RAG</div>', unsafe_allow_html=True)
     st.markdown('<div class="logo-sub">Academic City AI Assistant</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="sidebar-student"><strong>Name:</strong> jonatahn ahuche<br/>'
+        "<strong>Index:</strong> 10022200183</div>",
+        unsafe_allow_html=True,
+    )
     if st.button("Chat", use_container_width=True, key="nav_chat"):
         st.session_state.active_page = "chat"
     if st.button("+  New Chat", use_container_width=True, key="nav_new_chat"):
