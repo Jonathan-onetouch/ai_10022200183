@@ -55,6 +55,12 @@ st.markdown(
         background: transparent !important;
         gap: 0.35rem !important;
     }
+    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] {
+        color: #E8EEF7 !important;
+    }
+    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+        color: #E8EEF7 !important;
+    }
     [data-testid="stSidebar"] p,
     [data-testid="stSidebar"] span,
     [data-testid="stSidebar"] label,
@@ -110,11 +116,24 @@ st.markdown(
         color: #FFFFFF !important;
         font-weight: 700;
     }
-    .section-chip {
-        background: rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 0.58rem 0.75rem;
-        margin-bottom: 0.4rem; font-size: 0.92rem;
+    /* Sidebar chips: set text color here — div text otherwise inherits dark body color and disappears. */
+    [data-testid="stSidebar"] .section-chip {
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(191, 219, 254, 0.28);
+        border-radius: 10px;
+        padding: 0.58rem 0.75rem;
+        margin-bottom: 0.4rem;
+        font-size: 0.92rem;
+        color: #F8FAFC !important;
+        line-height: 1.35;
+        word-break: break-word;
     }
-    .section-chip.active { background: #EEF2FF; color: #0D2B52 !important; }
+    [data-testid="stSidebar"] .section-chip.active {
+        background: #F1F5F9 !important;
+        color: #0f172a !important;
+        border: 1px solid rgba(37, 99, 235, 0.45);
+        font-weight: 600;
+    }
     .topbar {
         background: var(--card); border-radius: 12px; padding: 0.95rem 1.05rem; box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06);
         margin-bottom: 0.65rem; border: 1px solid #ECEFF5;
@@ -154,9 +173,14 @@ st.markdown(
     [data-testid="stSidebar"] .profile strong {
         color: #FFFFFF !important;
     }
-    .recent-title {
-        margin-top: 0.6rem; margin-bottom: 0.4rem; font-size: 0.78rem; color: #A9BDD7;
-        letter-spacing: 0.7px; text-transform: uppercase;
+    [data-testid="stSidebar"] .recent-title {
+        margin-top: 0.6rem;
+        margin-bottom: 0.4rem;
+        font-size: 0.78rem;
+        color: #E2E8F0 !important;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 700;
     }
     div[data-testid="stChatInput"] {
         position: sticky;
