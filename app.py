@@ -6,10 +6,6 @@ import json
 from datetime import date
 from pathlib import Path
 from uuid import uuid4
-import json
-from datetime import date
-from pathlib import Path
-from uuid import uuid4
 
 from src.config import AppConfig
 from src.rag_pipeline import RAGPipeline
@@ -30,20 +26,7 @@ def save_manual_logs(entries: list[dict]) -> None:
     MANUAL_LOGS_PATH.parent.mkdir(parents=True, exist_ok=True)
     with open(MANUAL_LOGS_PATH, "w", encoding="utf-8") as f:
         json.dump(entries, f, indent=2, ensure_ascii=True)
-MANUAL_LOGS_PATH = Path("logs/manual_experiment_entries.json")
 
-
-def load_manual_logs() -> list[dict]:
-    if not MANUAL_LOGS_PATH.exists():
-        return []
-    with open(MANUAL_LOGS_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def save_manual_logs(entries: list[dict]) -> None:
-    MANUAL_LOGS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(MANUAL_LOGS_PATH, "w", encoding="utf-8") as f:
-        json.dump(entries, f, indent=2, ensure_ascii=True)
 
 st.markdown(
     """
@@ -59,8 +42,48 @@ st.markdown(
         --line: #E5E7EB;
     }
     .stApp { background: var(--bg); color: var(--text); }
-    [data-testid="stSidebar"] { background: linear-gradient(180deg, var(--primary-2) 0%, var(--primary) 100%); border-right: 1px solid #16355F; }
-    [data-testid="stSidebar"] * { color: #E5EDF5 !important; }
+    /* Sidebar: force dark chrome so Streamlit defaults do not wash out text/buttons */
+    [data-testid="stSidebar"],
+    [data-testid="stSidebar"] > div,
+    section[data-testid="stSidebar"] > div {
+        background: linear-gradient(180deg, #050d1a 0%, #0D2B52 55%, #0a1f3d 100%) !important;
+    }
+    [data-testid="stSidebar"] .block-container {
+        background: transparent !important;
+    }
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+        background: transparent !important;
+        gap: 0.35rem !important;
+    }
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] li {
+        color: #E8EEF7 !important;
+    }
+    [data-testid="stSidebar"] h1,
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3 {
+        color: #F8FAFC !important;
+    }
+    [data-testid="stSidebar"] hr {
+        border-color: rgba(148, 163, 184, 0.35) !important;
+    }
+    [data-testid="stSidebar"] .stButton > button {
+        width: 100%;
+        background-color: rgba(15, 23, 42, 0.92) !important;
+        color: #F8FAFC !important;
+        border: 1px solid rgba(148, 163, 184, 0.5) !important;
+        font-weight: 600;
+    }
+    [data-testid="stSidebar"] .stButton > button:hover {
+        background-color: rgba(37, 99, 235, 0.45) !important;
+        border-color: #93C5FD !important;
+        color: #FFFFFF !important;
+    }
+    [data-testid="stSidebar"] .stButton > button:focus {
+        box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.55) !important;
+    }
     .logo-title { font-size: 1.55rem; font-weight: 700; margin-bottom: 0.1rem; }
     .logo-sub { font-size: 0.8rem; color: #B6C9DB; margin-bottom: 1rem; }
     .section-chip {
@@ -151,8 +174,12 @@ if "selected_log_id" not in st.session_state:
 with st.sidebar:
     st.markdown('<div class="logo-title">ACity RAG</div>', unsafe_allow_html=True)
     st.markdown('<div class="logo-sub">Academic City AI Assistant</div>', unsafe_allow_html=True)
-    if st.button("+  New Chat", use_container_width=True):
+    if st.button("Chat", use_container_width=True, key="nav_chat"):
         st.session_state.active_page = "chat"
+    if st.button("+  New Chat", use_container_width=True, key="nav_new_chat"):
+        st.session_state.active_page = "chat"
+        st.session_state.messages = []
+        st.session_state.active_result = None
     st.markdown("### Chat History")
     if st.session_state.messages:
         recent_queries = [m["content"] for m in st.session_state.messages if m["role"] == "user"][-6:]
@@ -160,14 +187,15 @@ with st.sidebar:
             st.markdown(f'<div class="section-chip active">{q[:40]}{"..." if len(q) > 40 else ""}</div>', unsafe_allow_html=True)
     else:
         st.markdown('<div class="section-chip active">No previous chats yet</div>', unsafe_allow_html=True)
-    if st.button("Datasets", use_container_width=True):
-        st.session_state.active_page = "chat"
-    if st.button("Logs & Experiments", use_container_width=True):
+    st.markdown("### Navigate")
+    if st.button("Datasets", use_container_width=True, key="nav_datasets"):
+        st.session_state.active_page = "datasets"
+    if st.button("Logs & Experiments", use_container_width=True, key="nav_logs"):
         st.session_state.active_page = "logs"
-    if st.button("Evaluation Results", use_container_width=True):
-        st.session_state.active_page = "chat"
-    if st.button("Settings", use_container_width=True):
-        st.session_state.active_page = "chat"
+    if st.button("Evaluation Results", use_container_width=True, key="nav_evaluation"):
+        st.session_state.active_page = "evaluation"
+    if st.button("Settings", use_container_width=True, key="nav_settings"):
+        st.session_state.active_page = "settings"
     st.markdown('<div class="recent-title">Recent Chats</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-chip">2025 Budget Overview</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-chip">Ghana Election 2024 Results</div>', unsafe_allow_html=True)
@@ -268,8 +296,100 @@ if st.session_state.active_page == "logs":
         else:
             st.markdown('<div class="small-muted">Select a saved log to view its exact content.</div>', unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
+
+elif st.session_state.active_page == "datasets":
+    cfg_ds = AppConfig()
+    st.markdown(
+        """
+<div class="topbar">
+    <div class="top-title">Datasets</div>
+    <span class="small-muted">Sources used to build the retrieval index</span>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+    csv_p = Path(cfg_ds.csv_path)
+    pdf_p = Path(cfg_ds.pdf_path)
+    st.markdown("### Files on disk")
+    st.markdown(
+        "| File | Path | Present |\n|------|------|--------|\n"
+        f"| Election results (CSV) | `{cfg_ds.csv_path}` | **{'Yes' if csv_p.is_file() else 'No'}** |\n"
+        f"| 2025 budget (PDF) | `{cfg_ds.pdf_path}` | **{'Yes' if pdf_p.is_file() else 'No'}** |\n"
+    )
+    st.markdown("### What each dataset is for")
+    st.write(
+        "- **Ghana_Election_Result.csv** — constituency-level election results used to answer questions about votes, parties, and regions.\n"
+        "- **2025-Budget-Statement-and-Economic-Policy_v4.pdf** — national budget text used for fiscal policy, revenue, and macro targets."
+    )
+    st.info(
+        "If files are missing locally or on Streamlit Cloud, run `python scripts/download_data.py` "
+        "or upload the data folder per your deployment docs."
+    )
+
+elif st.session_state.active_page == "evaluation":
+    st.markdown(
+        """
+<div class="topbar">
+    <div class="top-title">Evaluation Results</div>
+    <span class="small-muted">Outputs from `scripts/run_experiments.py`</span>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+    adv_path = Path("logs/adversarial_report.json")
+    chunk_path = Path("logs/chunking_comparison.json")
+    if adv_path.is_file():
+        st.markdown("### Adversarial report")
+        with open(adv_path, encoding="utf-8") as f:
+            adv_data = json.load(f)
+        st.json(adv_data)
+    else:
+        st.warning(f"No file at `{adv_path}`. Run experiments to generate it.")
+    if chunk_path.is_file():
+        st.markdown("### Chunking comparison")
+        with open(chunk_path, encoding="utf-8") as f:
+            chunk_data = json.load(f)
+        st.json(chunk_data)
+    else:
+        st.warning(f"No file at `{chunk_path}`. Run experiments to generate it.")
+
+elif st.session_state.active_page == "settings":
+    cfg_st = AppConfig()
+    st.markdown(
+        """
+<div class="topbar">
+    <div class="top-title">Settings</div>
+    <span class="small-muted">Runtime configuration (read-only)</span>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+    st.markdown("### Models & retrieval")
+    st.write(
+        f"- **Embedding model:** `{cfg_st.embedding_model}`\n"
+        f"- **LLM model:** `{cfg_st.llm_model}`\n"
+        f"- **LLM base URL:** `{cfg_st.llm_base_url}`\n"
+        f"- **Default top_k:** {cfg_st.top_k}\n"
+        f"- **Hybrid weights:** vector {cfg_st.vector_weight}, keyword {cfg_st.keyword_weight}\n"
+        f"- **Max context chars:** {cfg_st.max_context_chars}\n"
+        f"- **Temperature:** {cfg_st.temperature}\n"
+    )
+    st.markdown("### Paths")
+    st.code(
+        f"data_dir: {cfg_st.data_dir}\ncsv: {cfg_st.csv_path}\npdf: {cfg_st.pdf_path}\n"
+        f"index: {cfg_st.index_path}\nlogs: {cfg_st.logs_dir}",
+        language="text",
+    )
+    if st.session_state.get("pipeline_error"):
+        st.error(
+            "LLM API key is not set in the environment. Set `GROQ_API_KEY` or `OPENAI_API_KEY` "
+            "in Streamlit **Secrets** (or your `.env`) so chat works."
+        )
+    else:
+        st.success("Pipeline initialized; LLM key is available in this session.")
+
 else:
-    # Top bar
+    # Top bar (main chat)
     top_left, top_right = st.columns([4.5, 1.5])
     with top_left:
         st.markdown(
